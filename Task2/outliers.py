@@ -3,10 +3,11 @@ import math
 from abc import ABC, abstractmethod
 from numpy.random import default_rng
 import matplotlib.pyplot as plt
-rng = default_rng()
 from sklearn.utils import shuffle
 from sklearn.linear_model import LinearRegression
 
+
+rng = default_rng(seed=0)
 
 # Generating Data
 ## Class for generating Data
@@ -262,7 +263,117 @@ for i in range(len(yo)) :
         indices.append(i)
         
 print(indices)
-   
+
+## Impact of number of outliers on the Regression
+
+### Generating Data Points
+s=(-1,2)
+data = Data2D(s, 3)
+X,y = data.generate_points(200)
+title = '200 Points Generated '
+plt.title(title)
+plt.scatter(X[:,1],y);
+
+## Fitting the regression line and printig the parameters
+a, b, c = regression(X[:,1].reshape(-1,1), y)
+print('Regression slope : %.3f' % a, 'Regression intercept : %.3f' % b, 'Regression score : %.3f' % c)
+print('Original line slope : %.3f' % s[1], 'Original line intercept : %.3f' % s[0])
+
+plt.plot(X,a*X+b, c='red')
+title = 'Fitting a regression Line '
+plt.title(title)
+plt.scatter(X[:,1],y)
+plt.show();
+
+## Defining a list of 20 outlier
+outliers = [(0,-20), (0,19), (5,-20), (5,26), (-5, -28), (10,-20),(15,0),(-10,6),(3,-18),(-6,6),(-1,8),(-7,10),(-1,15),(-10,1),(-4,13),(-8,3),(5,-1),(13,-2),(15,3),(3,-12)]
+x_outliers = np.array([outliers[i][0] for i in range(len(outliers))])
+y_outliers = np.array([outliers[i][1] for i in range(len(outliers))])
+Xo = np.concatenate((X[:,1],x_outliers), axis=0)
+yo = np.concatenate((y,y_outliers), axis=0)
+
+plt.scatter(X[:,1],y, c='blue')
+plt.scatter(x_outliers,y_outliers, c='orange', marker='x')
+plt.plot(X,a*X+b, c='red')
+plt.scatter(X[:,1],y)
+title = 'Visualisation of outliers'
+plt.title(title)
+plt.show();
 
 
+## We add each time one outlier and observe the effect
+slopes = []
+intercepts = []
+scores = []
+
+for i in range(1,len(outliers)+1):
+    
+    ## Adding i outlier
+    x_outliers = np.array([outliers[j][0] for j in range(i)])
+    y_outliers = np.array([outliers[j][1] for j in range(i)])
+    Xo = np.concatenate((X[:,1],x_outliers), axis=0)
+    yo = np.concatenate((y,y_outliers), axis=0)
+    
+    ## Fitting the regression line
+    ao, bo, co = regression(Xo.reshape(-1,1), yo)
+    print(f'After adding {i} outliers : ')
+    print('Original line slope : %.3f' % s[1], ', Original line intercept : %.3f' % s[0])
+    print('Original Regression slope : %.3f' % a, ', Outliers Regression slope : %.3f' % ao)
+    print('Original Regression intercept : %.3f' % b, ', Outliers Regression intercept : %.3f' % bo)
+    print('Original Regression score : %.3f' % c, ', Outliers Regression score : %.3f' % co)
+    
+    
+
+    ## Appending the parameters to the lists
+    slopes.append(ao)
+    intercepts.append(bo)
+    scores.append(co)
+    
+    ## Visualisation
+    plt.scatter(X[:,1],y, c='blue')
+    plt.scatter(x_outliers,y_outliers, c='orange', marker='x')
+    plt.plot(X,a*X+b, c='red', label = 'Original Regression line')
+    plt.plot(X,ao*X+bo, c='green', label = 'Outliers Regression line')
+    plt.scatter(X[:,1],y)
+    title = f'Regression visualisation of outliers after adding {i} outliers'
+    plt.title(title)
+    plt.legend()
+    plt.show();
+    
+    
+    
+    
+# Visualisation of regression parameters
+
+
+
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3)
+plt.figure(figsize=(20, 20), dpi=80)
+fig.tight_layout()
+
+x = np.arange(20)+1
+
+ax1.plot(x, slopes)
+ax2.plot(x, intercepts)
+ax3.plot(x, scores)
+
+ax1.set_title('Regression slope')
+ax2.set_title('Regression intercept')
+ax3.set_title('Regression score')
+
+ax1.set_xlabel('Number of outliers added')
+ax2.set_xlabel('Number of outliers added')
+ax3.set_xlabel('Number of outliers added')
+
+plt.show();
+
+
+
+##  Conclusion :
+'''
+The regression slopes may or may not change strongly, it depends on the positions of the outliers, if 2 outliers are symetric with respect to the regression line then their effect on the slope cancels out.
+
+Adding outliers always affect the regression score and make it smaller 
+
+'''
     

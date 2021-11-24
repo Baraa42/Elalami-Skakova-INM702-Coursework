@@ -343,3 +343,30 @@ vif_data = pd.DataFrame()
 vif_data["feature"] = X_variables.columns
 vif_data["VIF"] = [variance_inflation_factor(X_variables.values, i) for i in range(len(X_variables.columns))]
 print(vif_data)
+
+'''
+Dealing with multicollinearity. First method - substracting the mean. For that we will use a copy of our dataset to manipulate the data.
+'''
+
+#Substracting the mean on a copy of our dataset
+new_df = df.copy()
+print ("The mean value")
+print (new_df.mean())
+print( "The value after subraction of mean")
+adj_df = new_df -new_df.mean()
+print (adj_df)
+
+'''
+Subtract the mean method, which is also known as centering the variables. 
+This method removes the multicollinearity produced by interaction and higher-order terms as effectively as the other standardization methods, 
+but it has the added benefit of not changing the interpretation of the coefficients. 
+If you subtract the mean, each coefficient continues to estimate the change in the mean response per unit increase in X when all other predictors are held constant.
+'''
+
+#Checking VIF again
+X_variables = adj_df.drop(columns=["name"])
+# [["horsepower","weight","displacement", "mpg"]]
+vif_data = pd.DataFrame()
+vif_data["feature"] = X_variables.columns
+vif_data["VIF"] = [variance_inflation_factor(X_variables.values, i) for i in range(len(X_variables.columns))]
+print(vif_data)

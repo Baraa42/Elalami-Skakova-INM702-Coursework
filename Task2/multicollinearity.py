@@ -97,3 +97,29 @@ plt.scatter(X, y)
 plt.plot(X, slr.predict(X), color='red', linewidth=2);
 
 
+"""
+as x varibale increases, y outcome variable increases in a almost perfectly correlated manner.
+
+We can also have a look at correlation between all comulmns at our datset
+"""
+#scatterplot
+sns.set()
+cols = df.columns.drop(["name"])
+sns.pairplot(df[cols], size = 2.5)
+plt.show();
+
+# heatmap
+columns = df.columns
+hm = sns.heatmap(df[columns].corr(), cbar=True, annot=True)
+
+#Using statistical analysis to find whether there is a high correlation that can impact our output
+X = df.drop(columns=["name"])
+y = df["horsepower"]
+X_with_constant = sm.add_constant(X)
+model = sm.OLS(y, X_with_constant)
+results = model.fit()
+print(results.summary())
+
+'''
+[2] The condition number is large, 8.69e+04. This might indicate that there are strong multicollinearity or other numerical problems.
+'''

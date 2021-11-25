@@ -202,3 +202,34 @@ print(results.summary())
 Now we have checked again our statistic analysis on the database,
 we can see that there is no warning about the multiculliniarity
 '''
+
+
+'''
+Comparing the MSE train and R**2 for initial dataset with the dataset using the PCA.
+'''
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
+slr.fit(X_train, y_train)
+y_train_pred = slr.predict(X_train)
+y_test_pred = slr.predict(X_test)
+print('MSE train: {:.3f}, test: {:.3f}'.format(
+        mean_squared_error(y_train, y_train_pred),
+        mean_squared_error(y_test, y_test_pred)))
+print('R^2 train: {:.3f}, test: {:.3f}'.format(
+        r2_score(y_train, y_train_pred),
+        r2_score(y_test, y_test_pred)))
+
+
+X_train, X_test, y_train, y_test = train_test_split(X_pca_with_constant, y, test_size=0.3, random_state=0)
+slr.fit(X_train, y_train)
+y_train_pred = slr.predict(X_train)
+y_test_pred = slr.predict(X_test)
+print('MSE train: {:.3f}, test: {:.3f}'.format(
+        mean_squared_error(y_train, y_train_pred),
+        mean_squared_error(y_test, y_test_pred)))
+print('R^2 train: {:.3f}, test: {:.3f}'.format(
+        r2_score(y_train, y_train_pred),
+        r2_score(y_test, y_test_pred)))
+
+'''
+Conlcusion. As a result of our manipulations, MSE train and R**2 are smaller.
+'''

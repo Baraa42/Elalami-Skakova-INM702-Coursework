@@ -123,3 +123,14 @@ print(results.summary())
 '''
 [2] The condition number is large, 8.69e+04. This might indicate that there are strong multicollinearity or other numerical problems.
 '''
+
+'''
+Also, correlation can be checked using VIF. Presence of High Variance Inflation Factor in the dataset is usually undesirable, since it highlights unreliability of your computations in regression analysis.
+'''
+X_variables = df.drop(columns=["name"])
+# [["horsepower","weight","displacement", "mpg"]]
+vif_data = pd.DataFrame()
+vif_data["feature"] = X_variables.columns
+vif_data["VIF"] = [variance_inflation_factor(X_variables.values, i) for i in range(len(X_variables.columns))]
+print(vif_data)
+

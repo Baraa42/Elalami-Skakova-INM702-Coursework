@@ -86,7 +86,28 @@ def regression(X, y):
 
     return reg.coef_[0], reg.intercept_, reg.score(X, y)
 
+## Generating data plotting the regression line
+s = (-1,2)
+X, y = generate_data(s, 4, 100)
+a, b, c = regression(X[:,1].reshape(-1,1), y)
+print('Regression slope : %.3f' % a, 'Regression intercept : %.3f' % b, 'Regression score : %.3f' % c)
+plt.plot(X[:,1],a*X[:,1]+b, c='red')
+plt.scatter(X[:,1],y)
+plt.title('Linear Regression fit on generated data')
+plt.show();
 
+#Using statistical analysis to find whether there is a high correlation that can impact our output
+X_with_constant = sm.add_constant(X)
+model = sm.OLS(y, X_with_constant)
+results = model.fit()
+print(results.summary())
+#OLS Regression statistical analysis table, showed high condition number (8.59e+04),
+# indicating the strong multicollinearity problem.
+
+#We will use the PCA model and see how it will impact multicollinearity in our linear regression.
+
+
+#let's apply this knowledge on the "auto-mpg" dataset.
 #opening the dataset to work with "auto-mpg"
 path = '.'
 dataset = os.path.join("auto-mpg.csv")

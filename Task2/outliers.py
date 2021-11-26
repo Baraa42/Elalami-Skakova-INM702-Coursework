@@ -48,9 +48,6 @@ class Data2D:
 
         return X, y
 
-    def generate_outliers(self, N):
-        pass 
-
     
 ## Function to generate data points 
 

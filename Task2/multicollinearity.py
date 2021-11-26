@@ -2,7 +2,7 @@
 Multicollinearity in the Linear Regression Model
 """
 
-Importing packages
+#Importing packages
 import os
 import numpy as np
 import pandas as pd
@@ -47,7 +47,6 @@ Exploring correlation between columns of our dataset using different methods and
 # %matplotlib widget
 X1 = df["weight"].values.reshape(-1,1)
 X2 = df["mpg"].values.reshape(-1,1)
-# X3 = df["displacement"].values.reshape(-1,1)
 y = df["horsepower"].values.reshape(-1,1)
 fig = plt.figure()
 ax = plt.axes(projection = "3d")
@@ -55,13 +54,6 @@ ax.scatter3D(X1, y, X2, "gray")
 plt.show()
 
 # ploting a plane
-
-X1 = df["weight"].values.reshape(-1, 1)
-X2 = df["mpg"].values.reshape(-1, 1)
-# X3 = df["displacement"].values.reshape(-1,1)
-y = df["horsepower"].values.reshape(-1, 1)
-
-
 def plot_plane_with_points(x, y, z):
     X = np.hstack((x, y))
     X = np.hstack((np.ones((x.shape[0], 1)), X))
@@ -85,20 +77,13 @@ def plot_plane_with_points(x, y, z):
     ax.set_zlabel('y label')
 
     return plt.show()
+
+
 plot_plane_with_points(X1, y, X2)
 """
 We can see that there is a high correlation between these three columns.
-Method 2. Let's have a look at 2 specific columns of the dataset and their correlation.
-"""
-import matplotlib.pyplot as plt
-X = df[["weight"]]
-y = df["horsepower"]
-plt.scatter(X, y)
-plt.plot(X, slr.predict(X), color='red', linewidth=2);
 
-
-"""
-as x varibale increases, y outcome variable increases in a almost perfectly correlated manner.
+As x varibale increases, y outcome variable increases in a almost perfectly correlated manner.
 
 We can also have a look at correlation between all comulmns at our datset
 """
@@ -121,19 +106,19 @@ results = model.fit()
 print(results.summary())
 
 '''
-[2] The condition number is large, 8.69e+04. This might indicate that there are strong multicollinearity or other numerical problems.
+In our analysis we have used 2D, 3D models, pairplots and heatmaps using matplolib and seaborn libraires. They have showed the presence of high correlation between “displacement”, “horsepower”, “weight” and “cylinders” values. 
+We also called the OLS Regression statistical analysis table, which showed high condition number (8.59e+04), indicating the strong multicollinearity problem.
 '''
 
 '''
 Also, correlation can be checked using VIF. Presence of High Variance Inflation Factor in the dataset is usually undesirable, since it highlights unreliability of your computations in regression analysis.
 '''
-X_variables = df.drop(columns=["name"])
-# [["horsepower","weight","displacement", "mpg"]]
-vif_data = pd.DataFrame()
-vif_data["feature"] = X_variables.columns
-vif_data["VIF"] = [variance_inflation_factor(X_variables.values, i) for i in range(len(X_variables.columns))]
-print(vif_data)
 
+X_VIF = df.drop(columns=["name"])
+data = pd.DataFrame()
+data["feature"] = X_VIF.columns
+data["VIF"] = [variance_inflation_factor(X_VIF.values, i) for i in range(len(X_VIF.columns))]
+print(data)
 
 '''
 Dealing with multicollinearity. First method - substracting the mean. For that we will use a copy of our dataset to manipulate the data.
@@ -141,11 +126,10 @@ Dealing with multicollinearity. First method - substracting the mean. For that w
 
 #Substracting the mean on a copy of our dataset
 new_df = df.copy()
-print ("The mean value")
-print (new_df.mean())
-print( "The value after subraction of mean")
-adj_df = new_df -new_df.mean()
-print (adj_df)
+m_mean = new_df.mean() # mean value
+print (m_mean)
+result =  new_df -new_df.mean()#after substraction
+print (result)
 
 '''
 Subtract the mean method, which is also known as centering the variables.
@@ -155,13 +139,11 @@ If you subtract the mean, each coefficient continues to estimate the change in t
 '''
 
 #Checking VIF again
-X_variables = adj_df.drop(columns=["name"])
-# [["horsepower","weight","displacement", "mpg"]]
-vif_data = pd.DataFrame()
-vif_data["feature"] = X_variables.columns
-vif_data["VIF"] = [variance_inflation_factor(X_variables.values, i) for i in range(len(X_variables.columns))]
-print(vif_data)
-
+X_VIF = result.drop(columns=["name"])
+data = pd.DataFrame()
+data["feature"] = X_VIF.columns
+data["VIF"] = [variance_inflation_factor(X_VIF.values, i) for i in range(len(X_VIF.columns))]
+print(data)
 
 
 '''

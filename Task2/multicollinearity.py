@@ -105,7 +105,20 @@ print(results.summary())
 # indicating the strong multicollinearity problem.
 
 #We will use the PCA model and see how it will impact multicollinearity in our linear regression.
+X_std = StandardScaler().fit_transform(X)
+pca = PCA().fit(X_std)
+#Plotting the Cumulative Summation of the Explained Variance
+np.cumsum(pca.explained_variance_ratio_)
 
+#we will be using n_components=2
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_std)
+X_pca_with_constant = sm.add_constant(X_pca)
+
+#checking for multicollinearity after PCA
+model = sm.OLS(y, X_pca_with_constant)
+results = model.fit()
+print(results.summary())
 
 #let's apply this knowledge on the "auto-mpg" dataset.
 #opening the dataset to work with "auto-mpg"

@@ -4,16 +4,88 @@ Multicollinearity in the Linear Regression Model
 
 #Importing packages
 import os
+import math
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
+from abc import ABC, abstractmethod
+from numpy.random import default_rng
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, median_absolute_error, r2_score
+
+#Working with multicollinearity in Linear Regression
+# Class to generate 2D data points
+## Generate data points
+rng = default_rng()
+
+
+class Data2D:
+
+    def __init__(self, slope=(1, 1), noise_variance=1):
+        # intialize member variables here
+        self.slope = slope
+        self.noise_variance = noise_variance
+
+    def generate_points(self, N=50):
+        slope = self.slope
+        noise_variance = self.noise_variance
+
+        # initialize noise epsilon
+        epsilon = rng.normal(0, noise_variance ** (1 / 2), N)
+
+        ## Generate N points
+        X_1 = 30 * (np.random.random(N) - 0.5)
+        # creating multicollinearity
+        X_2 = X_1 ** 2
+
+        # We create a design matrix, where rows are datapoints and columns are features, or input dimensions
+        X = np.vstack([X_1, X_2]).transpose()
+
+        # initialize **y** with the equation of line here. Equation of line is written in the desciption above,
+        # line parameters (a,b, c) are stored in a local variable
+
+        y = X.dot(np.array(slope)) + epsilon
+
+        return X, y
+
+    def generate_outliers(self, n):
+        pass
+
+    ## function to generate 2D data points
+
+
+def generate_data(slope=(1, 1), noise_variance=1, N=50):
+    # initialize noise epsilon
+    epsilon = rng.normal(0, noise_variance ** (1 / 2), N)
+
+    ## Generate N points
+    # for X_1 generate random points between -15,15
+    X_1 = 30 * (np.random.random(N) - 0.5)
+    # creating multicollinearity
+    X_2 = X_1 ** 2
+
+    # We create a design matrix, where rows are datapoints and columns are features, or input dimensions
+    X = np.vstack([X_1, X_2]).transpose()
+
+    # initialize **y** with the equation of line here. Equation of line is written in the desciption above,
+    # line parameters (a,b, c) are stored in a local variable
+
+    y = X.dot(np.array(slope)) + epsilon
+
+    return X, y
+
+
+## Regression function returns slope, intercept, reg score
+def regression(X, y):
+    reg = LinearRegression().fit(X.reshape(-1, 1), y)
+
+    return reg.coef_[0], reg.intercept_, reg.score(X, y)
+
 
 #opening the dataset to work with "auto-mpg"
 path = '.'

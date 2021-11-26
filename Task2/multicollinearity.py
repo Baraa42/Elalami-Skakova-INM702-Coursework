@@ -23,6 +23,7 @@ df = pd.read_csv(dataset,na_values=['NA','?'])
 
 
 """
+Before starting any data manipulation, it is important to check on possible missing values of any value of the variable in the dataset.
 Preparation of the dataset
 """
 
@@ -111,7 +112,10 @@ We also called the OLS Regression statistical analysis table, which showed high 
 '''
 
 '''
-Also, correlation can be checked using VIF. Presence of High Variance Inflation Factor in the dataset is usually undesirable, since it highlights unreliability of your computations in regression analysis.
+Variance Inflation Factor (VIF) is another tool of the data analysis that demonstrates how one input variable impacts the other. 
+VIF higher than 10 is usually undesirable, since it highlights unreliability of computations in regression analysis and considered to be problematic. 
+It is computed using the R-squared from the regression: VIF = 1/(1-R**2 in k). 
+Our results showed extremely high VIF, confirming again high multicollinearity.
 '''
 
 X_VIF = df.drop(columns=["name"])
@@ -121,7 +125,10 @@ data["VIF"] = [variance_inflation_factor(X_VIF.values, i) for i in range(len(X_V
 print(data)
 
 '''
-Dealing with multicollinearity. First method - substracting the mean. For that we will use a copy of our dataset to manipulate the data.
+In order to solve this issue, several options are considered: leaving the dataset as it still predicts the output; removing, 
+but this can create omitted variable bias, since there will be variables outside of the model; 
+combining multicollinear variables to create new ones; and using PCA (Principal Component Analysis). 
+We have demonstrated the impact on multicollinearity of PCA and the method of subtracting the mean.
 '''
 
 #Substracting the mean on a copy of our dataset
@@ -147,6 +154,8 @@ print(data)
 
 
 '''
+In our case subtracting the mean method still left some of the variables with high VIF, 
+so we also implemented the PCA model with 3 n-components.
 PCA model works with multicollinearity. Let's see how it will work on our dataset.
 '''
 #Choosing the number of components
@@ -184,8 +193,6 @@ print(results.summary())
 Now we have checked again our statistic analysis on the database,
 we can see that there is no warning about the multiculliniarity
 '''
-
-
 '''
 Comparing the MSE train and R**2 for initial dataset with the dataset using the PCA.
 '''

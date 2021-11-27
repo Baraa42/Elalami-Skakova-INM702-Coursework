@@ -1,3 +1,14 @@
+'''
+## Introduction
+Outliers are the point most distant to the regression line.
+Their location can bedetected by plotting a visual representation and by performing certain calculations like standarddeviation.
+Outlier’s distance from the regression line is calculated as follows: $\left | y-\widehat{y} \right |> 2 \sqrt{\frac{SSE}{n-2}}$, where n is the number of data points,
+SSE is the sum of squared errors, y is the true value and y hat is the prediction.This facilitates its detection.
+For example, in a  2-dimensionalspace, a point P will be considered an outlier if it is not between D-2s and D+2s, where Dis the regression line and $\ s = \sqrt{\frac{SSE}{n-2}}$.
+We use this characteristic of an outlier as a basis to initiate the function with the input values quantity outliers and number of generated points.
+'''
+
+
 import numpy as np
 import math
 from abc import ABC, abstractmethod

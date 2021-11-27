@@ -289,5 +289,10 @@ print('R^2 train: {:.3f}, test: {:.3f}'.format(
         r2_score(y_test, y_test_pred)))
 
 '''
-Conlcusion. As a result of our manipulations, MSE train and R**2 are smaller.
+As a result of our manipulations, MSE train and R**2 are smaller.
+'''
+'''
+Conlcusion. 
+We have studied multicollinearity and its impact on the prediction of the dataset, demonstrated its presence by ploting visualisation tables and heatmaps. 
+We have learned how implementation of the PCA and substraction of the mean models decrease it.
 '''
